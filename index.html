@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>わたしの週予算</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 30px 16px;
+  background: #f5f1e8;
+  color: #554c3f;
+  font-family: sans-serif;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  background: #fffdf8;
+  padding: 28px 22px;
+  border-radius: 22px;
+  box-shadow: 0 5px 20px #786b5215;
+}
+
+h1 {
+  color: #71876a;
+  text-align: center;
+  font-size: 25px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #998e7d;
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 20px 0 8px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ded8ca;
+  border-radius: 10px;
+  font-size: 18px;
+  background: #fff;
+}
+
+.result {
+  background: #eef2e9;
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 25px;
+}
+
+.result p { margin: 8px 0; }
+
+.amount {
+  font-size: 30px;
+  font-weight: bold;
+  color: #71876a;
+}
+
+.progress {
+  height: 12px;
+  background: #ddd9ce;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 18px;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  background: #d5a13c;
+  transition: width .3s;
+}
+
+.message {
+  text-align: center;
+  margin-top: 18px;
+  font-weight: bold;
+  color: #71876a;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>わたしの週予算 🌿</h1>
+  <p class="subtitle">今週のお財布を管理しよう</p>
+
+  <label>今週の予算（円）</label>
+  <input type="number" id="budget" value="15000" min="0">
+
+  <label>使った金額（円）</label>
+  <input type="number" id="spent" value="4500" min="0">
+
+  <div class="result">
+    <p>今週の残り予算</p>
+    <div class="amount" id="remaining">10,500円</div>
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
+    <p id="percentage">予算の30%を使用</p>
+  </div>
+
+  <div class="message" id="message">
+    いいペース！この調子 🌷
+  </div>
+</div>
+
+<script>
+const budget = document.getElementById("budget");
+const spent = document.getElementById("spent");
+const remaining = document.getElementById("remaining");
+const bar = document.getElementById("bar");
+const percentage = document.getElementById("percentage");
+const message = document.getElementById("message");
+
+function update() {
+  const b = Math.max(0, Number(budget.value) || 0);
+  const s = Math.max(0, Number(spent.value) || 0);
+  const left = b - s;
+  const rate = b > 0 ? s / b * 100 : 0;
+
+  remaining.textContent =
+    left.toLocaleString("ja-JP") + "円";
+
+  remaining.style.color = left < 0 ? "#c65c4b" : "#71876a";
+
+  bar.style.width = Math.min(100, rate) + "%";
+
+  percentage.textContent =
+    "予算の" + Math.round(rate) + "%を使用";
+
+  message.textContent =
+    left < 0 ? "予算オーバー！使い方を見直そう" :
+    rate >= 80 ? "あと少し！使いすぎに注意 🌼" :
+    "いいペース！この調子 🌷";
+}
+
+budget.addEventListener("input", update);
+spent.addEventListener("input", update);
+update();
+</script>
+</body>
+</html>
